@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Upload, Flame, AlertCircle } from "lucide-react";
+import { Upload, Flame, AlertCircle, Camera, Shield, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
@@ -33,7 +33,6 @@ const Index = () => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    // TODO: Implement API call to your FastAPI backend
     setTimeout(() => {
       setIsLoading(false);
       toast({
@@ -44,27 +43,28 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto space-y-8 animate-fade-up">
-        {/* Hero Section */}
-        <div className="text-center space-y-4">
-          <Flame className="w-16 h-16 mx-auto text-primary" />
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-            Fire Detection AI
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800">
+      {/* Hero Section */}
+      <div className="container mx-auto px-4 pt-20 pb-32">
+        <div className="text-center space-y-6 animate-fade-up">
+          <div className="inline-block p-4 bg-purple-500/10 rounded-full mb-4">
+            <Flame className="w-12 h-12 text-purple-500" />
+          </div>
+          <h1 className="text-5xl md:text-6xl font-bold tracking-tighter text-white max-w-4xl mx-auto leading-tight">
+            Intelligent Fire Detection System
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Upload an image to test our advanced fire detection model. 
-            Get instant results with precision scores and detection visualization.
+          <p className="text-xl text-slate-300 max-w-2xl mx-auto">
+            Protecting environments with advanced AI technology. Upload images to detect fire and smoke with high precision.
           </p>
         </div>
 
-        {/* Upload Section */}
-        <Card className="p-6 bg-white shadow-lg rounded-lg">
-          <div className="space-y-4">
+        {/* Upload Card */}
+        <Card className="mt-12 p-8 bg-white/5 backdrop-blur-lg border-slate-700 max-w-2xl mx-auto">
+          <div className="space-y-6">
             <div className="flex items-center justify-center w-full">
               <label
                 htmlFor="image-upload"
-                className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors"
+                className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-slate-600 rounded-lg cursor-pointer hover:border-purple-500 transition-colors bg-slate-800/50"
               >
                 {preview ? (
                   <img
@@ -74,14 +74,11 @@ const Index = () => {
                   />
                 ) : (
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <Upload className="w-12 h-12 text-gray-400 mb-4" />
-                    <p className="mb-2 text-sm text-gray-500">
-                      <span className="font-semibold">Click to upload</span> or drag
-                      and drop
+                    <Upload className="w-12 h-12 text-slate-400 mb-4" />
+                    <p className="mb-2 text-sm text-slate-300">
+                      <span className="font-semibold">Click to upload</span> or drag and drop
                     </p>
-                    <p className="text-xs text-gray-500">
-                      PNG, JPG up to 5MB
-                    </p>
+                    <p className="text-xs text-slate-400">PNG, JPG up to 5MB</p>
                   </div>
                 )}
                 <input
@@ -94,32 +91,40 @@ const Index = () => {
               </label>
             </div>
 
-            <div className="flex justify-center">
-              <Button
-                onClick={handleSubmit}
-                disabled={!image || isLoading}
-                className="bg-primary hover:bg-primary/90"
-              >
-                {isLoading ? "Processing..." : "Detect Fire"}
-              </Button>
-            </div>
+            <Button
+              onClick={handleSubmit}
+              disabled={!image || isLoading}
+              className="w-full bg-purple-500 hover:bg-purple-600 text-white"
+            >
+              {isLoading ? "Processing..." : "Analyze Image"}
+            </Button>
           </div>
         </Card>
 
-        {/* Info Section */}
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <div className="flex items-start space-x-3">
-            <AlertCircle className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
-            <div>
-              <h3 className="font-medium text-gray-900">
-                About the Model
-              </h3>
-              <p className="mt-1 text-sm text-gray-500">
-                This AI model is trained on thousands of fire images and can detect
-                fires with high precision. It uses advanced computer vision
-                techniques to identify potential fire hazards in real-time.
-              </p>
+        {/* Features Grid */}
+        <div className="grid md:grid-cols-3 gap-8 mt-24">
+          <div className="p-6 rounded-lg bg-white/5 backdrop-blur-lg border border-slate-700 text-center">
+            <div className="inline-block p-3 bg-emerald-500/10 rounded-lg mb-4">
+              <Camera className="w-6 h-6 text-emerald-500" />
             </div>
+            <h3 className="text-lg font-semibold text-white mb-2">Real-time Detection</h3>
+            <p className="text-slate-300">Advanced computer vision for instant fire and smoke detection</p>
+          </div>
+          
+          <div className="p-6 rounded-lg bg-white/5 backdrop-blur-lg border border-slate-700 text-center">
+            <div className="inline-block p-3 bg-blue-500/10 rounded-lg mb-4">
+              <Shield className="w-6 h-6 text-blue-500" />
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-2">High Accuracy</h3>
+            <p className="text-slate-300">Precise detection with minimal false positives</p>
+          </div>
+          
+          <div className="p-6 rounded-lg bg-white/5 backdrop-blur-lg border border-slate-700 text-center">
+            <div className="inline-block p-3 bg-rose-500/10 rounded-lg mb-4">
+              <Leaf className="w-6 h-6 text-rose-500" />
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-2">Environmental Protection</h3>
+            <p className="text-slate-300">Early detection to prevent environmental damage</p>
           </div>
         </div>
       </div>
