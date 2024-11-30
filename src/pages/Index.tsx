@@ -4,10 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 
+const ROBOFLOW_API_KEY = "MjbWNTPIJJkZrHJOseFr";
+const ROBOFLOW_MODEL = "fire-detection-g9ebb/7";
+
 const Index = () => {
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [detectionResult, setDetectionResult] = useState<any>(null);
   const { toast } = useToast();
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,14 +36,45 @@ const Index = () => {
   };
 
   const handleSubmit = async () => {
+    if (!image) return;
+
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // Convert image to base64
+      const reader = new FileReader();
+      reader.readAsDataURL(image);
+      reader.onloadend = async () => {
+        const base64Image = reader.result?.toString().split(',')[1];
+        
+        // Make API call to Roboflow
+        const response = await fetch(
+          `https://detect.roboflow.com/${ROBOFLOW_MODEL}?api_key=${ROBOFLOW_API_KEY}`,
+          {
+            method: "POST",
+            body: base64Image,
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            }
+          }
+        );
+
+        const result = await response.json();
+        setDetectionResult(result);
+        
+        toast({
+          title: "Detection Complete",
+          description: `Found ${result.predictions?.length || 0} potential fire instances`,
+        });
+      };
+    } catch (error) {
       toast({
-        title: "Detection Complete",
-        description: "Fire detected with 95% confidence",
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to process image. Please try again.",
       });
-    }, 2000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -98,6 +133,17 @@ const Index = () => {
             >
               {isLoading ? "Processing..." : "Analyze Image"}
             </Button>
+
+            {/* Results Section */}
+            {detectionResult && (
+              <div className="mt-6 p-4 bg-slate-800/50 rounded-lg">
+                <h3 className="text-lg font-semibold text-white mb-2">Detection Results</h3>
+                <p className="text-slate-300">
+                  Found {detectionResult.predictions?.length || 0} potential fire instances
+                </p>
+                {/* Add more detailed results display here if needed */}
+              </div>
+            )}
           </div>
         </Card>
 
