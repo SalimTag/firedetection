@@ -41,32 +41,43 @@ const Index = () => {
     setIsLoading(true);
     try {
       // Convert image to base64
-      const reader = new FileReader();
-      reader.readAsDataURL(image);
-      reader.onloadend = async () => {
-        const base64Image = reader.result?.toString().split(',')[1];
-        
-        // Make API call to Roboflow
-        const response = await fetch(
-          `https://detect.roboflow.com/${ROBOFLOW_MODEL}?api_key=${ROBOFLOW_API_KEY}`,
-          {
-            method: "POST",
-            body: base64Image,
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded"
-            }
-          }
-        );
+      const base64Image = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64 = reader.result?.toString().split(',')[1];
+          if (base64) resolve(base64);
+          else reject(new Error('Failed to convert image'));
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(image);
+      });
 
-        const result = await response.json();
-        setDetectionResult(result);
-        
-        toast({
-          title: "Detection Complete",
-          description: `Found ${result.predictions?.length || 0} potential fire instances`,
-        });
-      };
+      // Make API call to Roboflow
+      const response = await fetch(
+        `https://detect.roboflow.com/${ROBOFLOW_MODEL}?api_key=${ROBOFLOW_API_KEY}`,
+        {
+          method: "POST",
+          body: base64Image,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("Detection result:", result); // For debugging
+      setDetectionResult(result);
+      
+      toast({
+        title: "Detection Complete",
+        description: `Found ${result.predictions?.length || 0} potential fire instances`,
+      });
     } catch (error) {
+      console.error("Detection error:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -102,11 +113,25 @@ const Index = () => {
                 className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-slate-600 rounded-lg cursor-pointer hover:border-purple-500 transition-colors bg-slate-800/50"
               >
                 {preview ? (
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    className="h-full object-contain"
-                  />
+                  <div className="relative w-full h-full">
+                    <img
+                      src={preview}
+                      alt="Preview"
+                      className="h-full w-full object-contain"
+                    />
+                    {detectionResult?.predictions?.map((pred: any, index: number) => (
+                      <div
+                        key={index}
+                        className="absolute border-2 border-purple-500"
+                        style={{
+                          left: `${pred.x * 100}%`,
+                          top: `${pred.y * 100}%`,
+                          width: `${pred.width * 100}%`,
+                          height: `${pred.height * 100}%`,
+                        }}
+                      />
+                    ))}
+                  </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     <Upload className="w-12 h-12 text-slate-400 mb-4" />
@@ -141,7 +166,12 @@ const Index = () => {
                 <p className="text-slate-300">
                   Found {detectionResult.predictions?.length || 0} potential fire instances
                 </p>
-                {/* Add more detailed results display here if needed */}
+                {detectionResult.predictions?.map((pred: any, index: number) => (
+                  <div key={index} className="mt-2 text-sm text-slate-400">
+                    <p>Confidence: {(pred.confidence * 100).toFixed(2)}%</p>
+                    <p>Class: {pred.class}</p>
+                  </div>
+                ))}
               </div>
             )}
           </div>
