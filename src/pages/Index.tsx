@@ -9,7 +9,7 @@ import { FeatureCard } from "@/components/FeatureCard";
 import { Navigation } from "@/components/Navigation";
 
 const ROBOFLOW_API_KEY = "MjbWNTPIJJkZrHJOseFr";
-const ROBOFLOW_MODEL = "fire-detection-g9ebb/7";
+const ROBOFLOW_MODEL = "fire-detection-g9ebb/8"; // Updated to version 8
 
 const Index = () => {
   const [image, setImage] = useState<File | null>(null);
@@ -44,6 +44,7 @@ const Index = () => {
 
     setIsLoading(true);
     try {
+      // Get base64 image without the data URL prefix
       const base64Image = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -71,6 +72,7 @@ const Index = () => {
       }
 
       const result = await response.json();
+      console.log('Detection result:', result); // Added for debugging
       setDetectionResult(result);
       
       toast({
