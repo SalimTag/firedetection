@@ -5,11 +5,11 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { ImagePreview } from "@/components/ImagePreview";
 import { DetectionResults } from "@/components/DetectionResults";
-import { FeatureCard } from "@/components/FeatureCard";
+import { TrainingDatasetInfo } from "@/components/TrainingDatasetInfo";
 import { Navigation } from "@/components/Navigation";
 
 const ROBOFLOW_API_KEY = "MjbWNTPIJJkZrHJOseFr";
-const ROBOFLOW_MODEL = "fire-detection-g9ebb/8"; // Updated to version 8
+const ROBOFLOW_MODEL = "fire-detection-g9ebb/8";
 
 const Index = () => {
   const [image, setImage] = useState<File | null>(null);
@@ -113,84 +113,84 @@ const Index = () => {
           </p>
         </div>
 
-        <Card className="mt-12 p-6 md:p-8 bg-white/5 backdrop-blur-lg border-slate-700 max-w-2xl mx-auto">
-          <div className="space-y-6">
-            <div className="flex items-center justify-center w-full">
-              <label
-                htmlFor="image-upload"
-                className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-slate-600 rounded-lg cursor-pointer hover:border-purple-500 transition-colors bg-slate-800/50"
-              >
-                <ImagePreview 
-                  preview={preview} 
-                  predictions={detectionResult?.predictions} 
-                />
-                <input
-                  id="image-upload"
-                  type="file"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                />
-              </label>
-            </div>
-
-            <div className="flex gap-4 flex-col sm:flex-row">
-              <Button
-                onClick={handleSubmit}
-                disabled={!image || isLoading}
-                className="flex-1 bg-purple-500 hover:bg-purple-600 text-white"
-              >
-                {isLoading ? (
-                  <>
-                    <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <UploadCloud className="mr-2 h-4 w-4" />
-                    Analyze Image
-                  </>
-                )}
-              </Button>
-              {(preview || detectionResult) && (
-                <Button
-                  onClick={handleReset}
-                  variant="outline"
-                  className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-700"
+        <div className="mt-12 grid gap-8 md:grid-cols-2">
+          <Card className="p-6 md:p-8 bg-white/5 backdrop-blur-lg border-slate-700">
+            <div className="space-y-6">
+              <div className="flex items-center justify-center w-full">
+                <label
+                  htmlFor="image-upload"
+                  className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-slate-600 rounded-lg cursor-pointer hover:border-purple-500 transition-colors bg-slate-800/50"
                 >
-                  Upload Another Image
+                  <ImagePreview 
+                    preview={preview} 
+                    predictions={detectionResult?.predictions} 
+                  />
+                  <input
+                    id="image-upload"
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                  />
+                </label>
+              </div>
+
+              <div className="flex gap-4 flex-col sm:flex-row">
+                <Button
+                  onClick={handleSubmit}
+                  disabled={!image || isLoading}
+                  className="flex-1 bg-purple-500 hover:bg-purple-600 text-white"
+                >
+                  {isLoading ? (
+                    <>
+                      <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <UploadCloud className="mr-2 h-4 w-4" />
+                      Analyze Image
+                    </>
+                  )}
                 </Button>
-              )}
+                {(preview || detectionResult) && (
+                  <Button
+                    onClick={handleReset}
+                    variant="outline"
+                    className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-700"
+                  >
+                    Upload Another Image
+                  </Button>
+                )}
+              </div>
+
+              <DetectionResults predictions={detectionResult?.predictions} />
             </div>
+          </Card>
 
-            <DetectionResults predictions={detectionResult?.predictions} />
+          <div className="space-y-8">
+            <TrainingDatasetInfo />
+            
+            <Card className="p-6 bg-slate-800/50 border-slate-700">
+              <h3 className="text-lg font-semibold text-white mb-4">About the System</h3>
+              <p className="text-slate-300 text-sm leading-relaxed">
+                Our Intelligent Fire Detection System utilizes state-of-the-art YOLOv8 architecture, 
+                trained on a comprehensive dataset of fire incidents. The system can identify fires 
+                with high accuracy across various environments and conditions, providing rapid detection 
+                for enhanced safety and response times.
+              </p>
+              <div className="mt-6 grid grid-cols-2 gap-4">
+                <div className="p-4 bg-slate-700/50 rounded-lg">
+                  <h4 className="text-sm font-medium text-white mb-2">Real-time Detection</h4>
+                  <p className="text-xs text-slate-400">Instant analysis of uploaded images with precise fire detection</p>
+                </div>
+                <div className="p-4 bg-slate-700/50 rounded-lg">
+                  <h4 className="text-sm font-medium text-white mb-2">High Accuracy</h4>
+                  <p className="text-xs text-slate-400">Advanced AI model trained on diverse fire scenarios</p>
+                </div>
+              </div>
+            </Card>
           </div>
-        </Card>
-
-        <div className="grid md:grid-cols-3 gap-8 mt-24">
-          <FeatureCard
-            icon={Camera}
-            title="Real-time Detection"
-            description="Advanced computer vision for instant fire and smoke detection"
-            iconColor="text-emerald-500"
-            bgColor="bg-emerald-500/10"
-          />
-          
-          <FeatureCard
-            icon={Shield}
-            title="High Accuracy"
-            description="Precise detection with minimal false positives"
-            iconColor="text-blue-500"
-            bgColor="bg-blue-500/10"
-          />
-          
-          <FeatureCard
-            icon={Leaf}
-            title="Environmental Protection"
-            description="Early detection to prevent environmental damage"
-            iconColor="text-rose-500"
-            bgColor="bg-rose-500/10"
-          />
         </div>
       </div>
     </div>
