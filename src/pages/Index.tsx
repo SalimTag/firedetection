@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Upload, Flame, Camera, Shield, Leaf } from "lucide-react";
+import { Upload, Flame, Camera, Shield, Leaf, ArrowRight, UploadCloud, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { ImagePreview } from "@/components/ImagePreview";
 import { DetectionResults } from "@/components/DetectionResults";
 import { FeatureCard } from "@/components/FeatureCard";
+import { Navigation } from "@/components/Navigation";
 
 const ROBOFLOW_API_KEY = "MjbWNTPIJJkZrHJOseFr";
 const ROBOFLOW_MODEL = "fire-detection-g9ebb/7";
@@ -70,7 +71,6 @@ const Index = () => {
       }
 
       const result = await response.json();
-      console.log("Detection result:", result);
       setDetectionResult(result);
       
       toast({
@@ -89,22 +89,29 @@ const Index = () => {
     }
   };
 
+  const handleReset = () => {
+    setImage(null);
+    setPreview(null);
+    setDetectionResult(null);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800">
+      <Navigation />
       <div className="container mx-auto px-4 pt-20 pb-32">
         <div className="text-center space-y-6 animate-fade-up">
           <div className="inline-block p-4 bg-purple-500/10 rounded-full mb-4">
             <Flame className="w-12 h-12 text-purple-500" />
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tighter text-white max-w-4xl mx-auto leading-tight">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-white max-w-4xl mx-auto leading-tight">
             Intelligent Fire Detection System
           </h1>
-          <p className="text-xl text-slate-300 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto">
             Protecting environments with advanced AI technology. Upload images to detect fire and smoke with high precision.
           </p>
         </div>
 
-        <Card className="mt-12 p-8 bg-white/5 backdrop-blur-lg border-slate-700 max-w-2xl mx-auto">
+        <Card className="mt-12 p-6 md:p-8 bg-white/5 backdrop-blur-lg border-slate-700 max-w-2xl mx-auto">
           <div className="space-y-6">
             <div className="flex items-center justify-center w-full">
               <label
@@ -125,13 +132,34 @@ const Index = () => {
               </label>
             </div>
 
-            <Button
-              onClick={handleSubmit}
-              disabled={!image || isLoading}
-              className="w-full bg-purple-500 hover:bg-purple-600 text-white"
-            >
-              {isLoading ? "Processing..." : "Analyze Image"}
-            </Button>
+            <div className="flex gap-4 flex-col sm:flex-row">
+              <Button
+                onClick={handleSubmit}
+                disabled={!image || isLoading}
+                className="flex-1 bg-purple-500 hover:bg-purple-600 text-white"
+              >
+                {isLoading ? (
+                  <>
+                    <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <UploadCloud className="mr-2 h-4 w-4" />
+                    Analyze Image
+                  </>
+                )}
+              </Button>
+              {(preview || detectionResult) && (
+                <Button
+                  onClick={handleReset}
+                  variant="outline"
+                  className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-700"
+                >
+                  Upload Another Image
+                </Button>
+              )}
+            </div>
 
             <DetectionResults predictions={detectionResult?.predictions} />
           </div>
