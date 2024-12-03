@@ -1,69 +1,117 @@
-# Welcome to your Lovable project
+# Fire Detection System
 
-## Project info
+This project implements an advanced fire detection system using YOLOv8 for real-time fire detection. It includes training, testing, and deployment scripts, as well as a FastAPI-based inference API.
 
-**URL**: https://lovable.dev/projects/4533c880-460f-49d7-91b7-fe301c8d5e0d
+## Overview
 
-## How can I edit this code?
+The system consists of three main components:
+1. Dataset augmentation and preparation
+2. YOLOv8 model training and fine-tuning
+3. FastAPI deployment backend
 
-There are several ways of editing your application.
+## Features
 
-**Use Lovable**
+- Train and test YOLOv8 on a custom fire dataset
+- Deploy a FastAPI app for real-time fire detection
+- Real-time image processing and detection
+- Comprehensive dataset augmentation pipeline
+- Production-ready API endpoints
+- Interactive web interface for testing
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/4533c880-460f-49d7-91b7-fe301c8d5e0d) and start prompting.
+## Project Components
 
-Changes made via Lovable will be committed automatically to this repo.
+### Dataset Augmentation
+The dataset preparation code is available at: [Fire-Detection Repository](https://github.com/SalimTag/Fire-Detection.git)
 
-**Use your preferred IDE**
+This repository contains:
+- Data augmentation scripts
+- Dataset preprocessing tools
+- Training data organization utilities
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Model Training
+YOLOv8 training and fine-tuning documentation: [YOLOv8 Documentation](https://ultralytics.com/yolov8)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Key training features:
+- Custom dataset integration
+- Model fine-tuning parameters
+- Training configuration files
+- Validation scripts
 
-Follow these steps:
+### Backend Deployment
+Backend implementation code: [Fire-Detection-backend Repository](https://github.com/SalimTag/Fire-Detection-backend)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Features:
+- FastAPI server implementation
+- Real-time inference endpoints
+- Image processing pipeline
+- API documentation
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## Setup
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+1. Clone the repository:
+```bash
+git clone https://github.com/SalimTag/Fire-Detection.git
 ```
 
-**Edit a file directly in GitHub**
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+3. Set up the backend:
+```bash
+git clone https://github.com/SalimTag/Fire-Detection-backend.git
+cd Fire-Detection-backend
+pip install -r requirements.txt
+```
 
-**Use GitHub Codespaces**
+## Model Training
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. Prepare your dataset following the YOLOv8 format
+2. Configure training parameters in `config.yaml`
+3. Run training:
+```bash
+python train.py --data config.yaml --epochs 100
+```
 
-## What technologies are used for this project?
+## Deployment
 
-This project is built with .
+1. Start the FastAPI backend:
+```bash
+cd Fire-Detection-backend
+uvicorn main:app --reload
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+2. The API will be available at `http://localhost:8000`
 
-## How can I deploy this project?
+## API Documentation
 
-Simply open [Lovable](https://lovable.dev/projects/4533c880-460f-49d7-91b7-fe301c8d5e0d) and click on Share -> Publish.
+Once the server is running, visit:
+- API documentation: `http://localhost:8000/docs`
+- Alternative documentation: `http://localhost:8000/redoc`
 
-## I want to use a custom domain - is that possible?
+## Contributing
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- YOLOv8 team for the amazing object detection framework
+- FastAPI for the modern web framework
+- The open-source community for various tools and libraries used in this project
+
+## Contact
+
+Your Name - [@YourTwitter](https://twitter.com/YourTwitter)
+
+Project Links:
+- Main Repository: [https://github.com/SalimTag/Fire-Detection](https://github.com/SalimTag/Fire-Detection)
+- Backend Repository: [https://github.com/SalimTag/Fire-Detection-backend](https://github.com/SalimTag/Fire-Detection-backend)
