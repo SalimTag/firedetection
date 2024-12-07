@@ -10,7 +10,7 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 // Roboflow configuration
 const ROBOFLOW_API_KEY = "MjbWNTPIJJkZrHJOseFr";
 const ROBOFLOW_MODEL = "fire-detection-g9ebb/8";
-const ROBOFLOW_API_URL = `https://detect.roboflow.com/${ROBOFLOW_MODEL}?api_key=${ROBOFLOW_API_KEY}`;
+const ROBOFLOW_API_URL = `https://detect.roboflow.com/${ROBOFLOW_MODEL}?api_key=${ROBOFLOW_API_KEY}&confidence=40&overlap=30`;
 
 export const UploadSection = () => {
   const [image, setImage] = useState<File | null>(null);
