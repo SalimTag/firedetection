@@ -7,8 +7,10 @@ import { ImagePreview } from "@/components/ImagePreview";
 import { DetectionResults } from "@/components/DetectionResults";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 
+// Roboflow configuration
 const ROBOFLOW_API_KEY = "MjbWNTPIJJkZrHJOseFr";
 const ROBOFLOW_MODEL = "fire-detection-g9ebb/8";
+const ROBOFLOW_API_URL = `https://detect.roboflow.com/${ROBOFLOW_MODEL}?api_key=${ROBOFLOW_API_KEY}`;
 
 export const UploadSection = () => {
   const [image, setImage] = useState<File | null>(null);
@@ -52,6 +54,7 @@ export const UploadSection = () => {
 
     setIsLoading(true);
     try {
+      // Convert image to base64
       const base64Image = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -63,28 +66,36 @@ export const UploadSection = () => {
         reader.readAsDataURL(image);
       });
 
-      const response = await fetch(
-        `https://detect.roboflow.com/${ROBOFLOW_MODEL}?api_key=${ROBOFLOW_API_KEY}`,
-        {
-          method: "POST",
-          body: base64Image,
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          }
+      console.log("Sending request to Roboflow API...");
+      
+      const response = await fetch(ROBOFLOW_API_URL, {
+        method: "POST",
+        body: base64Image,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
         }
-      );
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const result = await response.json();
+      console.log("Roboflow API response:", result);
+      
       setDetectionResult(result);
       
-      toast({
-        title: "Detection Complete",
-        description: `Found ${result.predictions?.length || 0} potential fire instances`,
-      });
+      if (result.predictions && result.predictions.length > 0) {
+        toast({
+          title: "Detection Complete",
+          description: `Found ${result.predictions.length} potential fire instances`,
+        });
+      } else {
+        toast({
+          title: "No Fire Detected",
+          description: "No fire instances were detected in this image",
+        });
+      }
     } catch (error) {
       console.error("Detection error:", error);
       toast({
@@ -104,12 +115,12 @@ export const UploadSection = () => {
   };
 
   return (
-    <Card className="p-6 md:p-8 bg-white/5 backdrop-blur-lg border-slate-700 transition-transform hover:scale-[1.02]">
+    <Card className="p-6 md:p-8 bg-slate-800/50 backdrop-blur-lg border-slate-700 transition-all hover:bg-slate-800/60">
       <div className="space-y-6">
         <div className="flex items-center justify-center w-full">
           <label
             htmlFor="image-upload"
-            className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-slate-600 rounded-lg cursor-pointer hover:border-purple-500 transition-colors bg-slate-800/50"
+            className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer border-slate-600 hover:border-purple-500 transition-colors bg-slate-900/50"
           >
             <ImagePreview 
               preview={preview} 
@@ -129,7 +140,7 @@ export const UploadSection = () => {
           <Button
             onClick={handleSubmit}
             disabled={!image || isLoading}
-            className="flex-1 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
+            className="flex-1 bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white shadow-lg hover:shadow-purple-500/20 transition-all duration-300 transform hover:-translate-y-0.5"
           >
             {isLoading ? (
               <>
