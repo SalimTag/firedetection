@@ -68,16 +68,17 @@ export const UploadSection = () => {
 
       console.log("Sending request to Roboflow API...");
       
-      const response = await fetch(ROBOFLOW_API_URL, {
+      const formData = new FormData();
+      formData.append('file', image);
+
+      const response = await fetch(`${ROBOFLOW_API_URL}?api_key=${ROBOFLOW_API_KEY}&confidence=40&overlap=30`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Api-Key": ROBOFLOW_API_KEY
-        },
-        body: base64Image
+        body: formData
       });
 
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error("API Error Response:", errorText);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
