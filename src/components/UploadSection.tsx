@@ -9,8 +9,9 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 // Roboflow configuration
 const ROBOFLOW_API_KEY = "MjbWNTPIJJkZrHJOseFr";
-const ROBOFLOW_MODEL = "fire-detection-g9ebb/8";
-const ROBOFLOW_API_URL = `https://detect.roboflow.com/${ROBOFLOW_MODEL}`;
+const ROBOFLOW_MODEL = "fire-detection-g9ebb";
+const ROBOFLOW_VERSION = "8";
+const ROBOFLOW_API_URL = `https://detect.roboflow.com/${ROBOFLOW_MODEL}/${ROBOFLOW_VERSION}`;
 
 export const UploadSection = () => {
   const [image, setImage] = useState<File | null>(null);
@@ -58,6 +59,7 @@ export const UploadSection = () => {
       formData.append('file', image);
 
       console.log("Sending request to Roboflow API...");
+      console.log("API URL:", ROBOFLOW_API_URL);
       
       const response = await fetch(`${ROBOFLOW_API_URL}?api_key=${ROBOFLOW_API_KEY}&confidence=40&overlap=30`, {
         method: "POST",
@@ -73,11 +75,14 @@ export const UploadSection = () => {
       const result = await response.json();
       console.log("Roboflow API response:", result);
       
-      // Transform the predictions if needed
+      // Transform the predictions to ensure consistent format
       if (result.predictions) {
         result.predictions = result.predictions.map((pred: any) => ({
-          ...pred,
-          confidence: pred.confidence || 0.805, // Use provided confidence or default
+          x: pred.x || 0,
+          y: pred.y || 0,
+          width: pred.width || 0,
+          height: pred.height || 0,
+          confidence: pred.confidence || 0.805,
           class: pred.class || "fire",
         }));
       }
