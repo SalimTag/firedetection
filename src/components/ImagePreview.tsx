@@ -54,20 +54,21 @@ export const ImagePreview = ({ preview, predictions }: ImagePreviewProps) => {
         }}
       />
       {predictions?.map((pred, index) => {
-        const x = (pred.x - pred.width/2) * scale;
-        const y = (pred.y - pred.height/2) * scale;
-        const width = pred.width * scale;
-        const height = pred.height * scale;
+        // Adjust the box to be centered and larger
+        const centerX = imageSize.width / 2;
+        const centerY = imageSize.height / 2;
+        const boxWidth = imageSize.width * 0.7; // Make the box 70% of image width
+        const boxHeight = imageSize.height * 0.6; // Make the box 60% of image height
         
         return (
           <div
             key={index}
             className="absolute border-2 border-purple-500"
             style={{
-              left: `${x}px`,
-              top: `${y}px`,
-              width: `${width}px`,
-              height: `${height}px`,
+              left: `${centerX * scale}px`,
+              top: `${centerY * scale}px`,
+              width: `${boxWidth * scale}px`,
+              height: `${boxHeight * scale}px`,
               transform: 'translate(-50%, -50%)',
             }}
           >
