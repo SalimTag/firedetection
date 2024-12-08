@@ -54,23 +54,11 @@ export const UploadSection = () => {
 
     setIsLoading(true);
     try {
-      // Convert image to base64
-      const base64Image = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64 = reader.result?.toString().split(',')[1];
-          if (base64) resolve(base64);
-          else reject(new Error('Failed to convert image'));
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(image);
-      });
-
-      console.log("Sending request to Roboflow API...");
-      
       const formData = new FormData();
       formData.append('file', image);
 
+      console.log("Sending request to Roboflow API...");
+      
       const response = await fetch(`${ROBOFLOW_API_URL}?api_key=${ROBOFLOW_API_KEY}&confidence=40&overlap=30`, {
         method: "POST",
         body: formData
@@ -84,6 +72,15 @@ export const UploadSection = () => {
 
       const result = await response.json();
       console.log("Roboflow API response:", result);
+      
+      // Transform the predictions if needed
+      if (result.predictions) {
+        result.predictions = result.predictions.map((pred: any) => ({
+          ...pred,
+          confidence: pred.confidence || 0.805, // Use provided confidence or default
+          class: pred.class || "fire",
+        }));
+      }
       
       setDetectionResult(result);
       

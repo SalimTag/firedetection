@@ -16,7 +16,7 @@ export const TrainingDatasetInfo = () => {
             <Shield className="w-5 h-5 text-emerald-500 mt-1" />
             <div>
               <h4 className="text-sm font-medium text-white">Model Version</h4>
-              <p className="text-sm text-slate-400">YOLOv8 Version 8</p>
+              <p className="text-sm text-slate-400">YOLO Version 8</p>
             </div>
           </div>
           <div className="flex items-start space-x-3">
