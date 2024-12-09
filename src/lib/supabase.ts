@@ -10,20 +10,51 @@ declare global {
   }
 }
 
-console.log('Window env object:', window.env);
-console.log('Supabase URL:', window.env?.SUPABASE_URL);
-console.log('Supabase Key:', window.env?.SUPABASE_ANON_KEY ? '[PRESENT]' : '[MISSING]');
+// Wait for window.env to be populated
+const getSupabaseClient = () => {
+  if (!window.env) {
+    console.warn('window.env is not initialized yet');
+    return null;
+  }
 
-const supabaseUrl = window.env?.SUPABASE_URL;
-const supabaseKey = window.env?.SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-  console.error('Supabase connection error:', {
+  const { SUPABASE_URL, SUPABASE_ANON_KEY } = window.env;
+  
+  console.log('Supabase initialization attempt:', {
     hasWindowEnv: !!window.env,
-    hasUrl: !!supabaseUrl,
-    hasKey: !!supabaseKey
+    hasUrl: !!SUPABASE_URL,
+    hasKey: !!SUPABASE_ANON_KEY
   });
-  throw new Error('Missing Supabase environment variables. Make sure you have connected your Supabase project in the Lovable interface.');
-}
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    console.error('Missing Supabase credentials:', {
+      url: SUPABASE_URL ? '[PRESENT]' : '[MISSING]',
+      key: SUPABASE_ANON_KEY ? '[PRESENT]' : '[MISSING]'
+    });
+    return null;
+  }
+
+  return createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+};
+
+// Initialize with retry mechanism
+let retryCount = 0;
+const MAX_RETRIES = 3;
+
+const initializeSupabase = () => {
+  const client = getSupabaseClient();
+  
+  if (!client && retryCount < MAX_RETRIES) {
+    retryCount++;
+    console.log(`Retrying Supabase initialization (attempt ${retryCount}/${MAX_RETRIES})...`);
+    setTimeout(initializeSupabase, 1000); // Retry after 1 second
+    return null;
+  }
+  
+  if (!client) {
+    throw new Error('Missing Supabase environment variables. Make sure you have connected your Supabase project in the Lovable interface.');
+  }
+  
+  return client;
+};
+
+export const supabase = initializeSupabase();
