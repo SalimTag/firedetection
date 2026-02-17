@@ -1,7 +1,17 @@
+/**
+ * Navigation Component
+ * @author Salim Tagemouati
+ * @description Fixed navigation bar with responsive mobile menu
+ */
+
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+/**
+ * Main navigation bar component
+ * @returns {JSX.Element} Navigation component
+ */
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
 

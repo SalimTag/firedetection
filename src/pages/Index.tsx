@@ -1,3 +1,9 @@
+/**
+ * Fire Detection System - Main Page Component
+ * @author Salim Tagemouati
+ * @description Main landing page for the fire detection application with image upload and analysis
+ */
+
 import { useState } from "react";
 import { Upload, Flame, Camera, Shield, Leaf, ArrowRight, UploadCloud, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,9 +19,15 @@ import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
 import { FeatureCard } from "@/components/FeatureCard";
 
-const ROBOFLOW_API_KEY = "MjbWNTPIJJkZrHJOseFr";
-const ROBOFLOW_MODEL = "fire-detection-g9ebb/8";
+/** Roboflow API key for authentication - from environment variables */
+const ROBOFLOW_API_KEY = import.meta.env.VITE_ROBOFLOW_API_KEY || "MjbWNTPIJJkZrHJOseFr";
+/** Roboflow model identifier for fire detection - from environment variables */
+const ROBOFLOW_MODEL = import.meta.env.VITE_ROBOFLOW_MODEL || "fire-detection-g9ebb/8";
 
+/**
+ * Index page component - Main fire detection interface
+ * @returns {JSX.Element} The main page component
+ */
 const Index = () => {
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -23,6 +35,10 @@ const Index = () => {
   const [detectionResult, setDetectionResult] = useState<any>(null);
   const { toast } = useToast();
 
+  /**
+   * Handles image file upload and validation
+   * @param {React.ChangeEvent<HTMLInputElement>} e - File input change event
+   */
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -53,6 +69,10 @@ const Index = () => {
     }
   };
 
+  /**
+   * Submits the uploaded image to Roboflow API for fire detection
+   * Converts image to base64 and sends to detection endpoint
+   */
   const handleSubmit = async () => {
     if (!image) return;
 
@@ -105,6 +125,9 @@ const Index = () => {
     }
   };
 
+  /**
+   * Resets the application state to allow uploading a new image
+   */
   const handleReset = () => {
     setImage(null);
     setPreview(null);
