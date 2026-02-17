@@ -1,12 +1,29 @@
+/**
+ * Detection Results Component
+ * @author Salim Tagemouati
+ * @description Displays detection results with confidence scores
+ */
+
+/**
+ * Prediction object structure
+ */
 interface Prediction {
   confidence: number;
   class: string;
 }
 
+/**
+ * Props for DetectionResults component
+ */
 interface DetectionResultsProps {
   predictions: Prediction[] | null;
 }
 
+/**
+ * Displays formatted detection results
+ * @param {DetectionResultsProps} props - Component props
+ * @returns {JSX.Element | null} Detection results or null if no predictions
+ */
 export const DetectionResults = ({ predictions }: DetectionResultsProps) => {
   if (!predictions) return null;
 

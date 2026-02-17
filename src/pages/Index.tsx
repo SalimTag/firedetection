@@ -19,10 +19,10 @@ import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
 import { FeatureCard } from "@/components/FeatureCard";
 
-/** Roboflow API key for authentication */
-const ROBOFLOW_API_KEY = "MjbWNTPIJJkZrHJOseFr";
-/** Roboflow model identifier for fire detection */
-const ROBOFLOW_MODEL = "fire-detection-g9ebb/8";
+/** Roboflow API key for authentication - from environment variables */
+const ROBOFLOW_API_KEY = import.meta.env.VITE_ROBOFLOW_API_KEY || "MjbWNTPIJJkZrHJOseFr";
+/** Roboflow model identifier for fire detection - from environment variables */
+const ROBOFLOW_MODEL = import.meta.env.VITE_ROBOFLOW_MODEL || "fire-detection-g9ebb/8";
 
 /**
  * Index page component - Main fire detection interface

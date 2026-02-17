@@ -1,6 +1,15 @@
+/**
+ * Image Preview Component with Detection Visualization
+ * @author Salim Tagemouati
+ * @description Displays uploaded image with bounding boxes for detected fire/smoke
+ */
+
 import { useState, useRef, useEffect } from "react";
 import { Upload } from "lucide-react";
 
+/**
+ * Prediction object from Roboflow API
+ */
 interface Prediction {
   x: number;
   y: number;
@@ -10,11 +19,19 @@ interface Prediction {
   class: string;
 }
 
+/**
+ * Props for ImagePreview component
+ */
 interface ImagePreviewProps {
   preview: string | null;
   predictions: Prediction[] | null;
 }
 
+/**
+ * Displays image preview with detection bounding boxes
+ * @param {ImagePreviewProps} props - Component props
+ * @returns {JSX.Element} Image preview with detection overlays
+ */
 export const ImagePreview = ({ preview, predictions }: ImagePreviewProps) => {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const containerRef = useRef<HTMLDivElement>(null);

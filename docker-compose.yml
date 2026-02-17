@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_ROBOFLOW_API_KEY: ${VITE_ROBOFLOW_API_KEY}
+        VITE_ROBOFLOW_MODEL: ${VITE_ROBOFLOW_MODEL}
+        VITE_MAX_FILE_SIZE: ${VITE_MAX_FILE_SIZE:-5242880}
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

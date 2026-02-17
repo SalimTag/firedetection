@@ -1,5 +1,14 @@
+/**
+ * Feature Card Component
+ * @author Salim Tagemouati
+ * @description Displays a feature with icon, title, and description
+ */
+
 import { LucideIcon } from "lucide-react";
 
+/**
+ * Props for FeatureCard component
+ */
 interface FeatureCardProps {
   icon: LucideIcon;
   title: string;
@@ -8,6 +17,11 @@ interface FeatureCardProps {
   bgColor: string;
 }
 
+/**
+ * Displays a feature card with icon and description
+ * @param {FeatureCardProps} props - Component props
+ * @returns {JSX.Element} Feature card component
+ */
 export const FeatureCard = ({ icon: Icon, title, description, iconColor, bgColor }: FeatureCardProps) => {
   return (
     <div className="p-6 rounded-lg bg-white/5 backdrop-blur-lg border border-slate-700 text-center">
