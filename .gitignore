@@ -74,9 +74,6 @@ tmp/
 temp/
 *.tmp
 
-# Docker
-.dockerignore
-
 # Misc
 .cache/
 .turbo/
