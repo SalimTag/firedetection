@@ -1,3 +1,9 @@
+/**
+ * Fire Detection System - Root Application Component
+ * @author Salim Tagemouati
+ * @description Sets up React Query, routing, and global UI components
+ */
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,6 +13,10 @@ import Index from "./pages/Index";
 
 const queryClient = new QueryClient();
 
+/**
+ * Main App component with providers and routing
+ * @returns {JSX.Element} The root application component
+ */
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
